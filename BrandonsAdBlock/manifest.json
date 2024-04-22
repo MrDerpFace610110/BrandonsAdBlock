@@ -2,9 +2,17 @@
     "name": "Brandons Ad Blocker",
     "version": "1.0.0",
     "manifest_version": 3,
+
     "permissions": [
         "declarativeNetRequest"
     ],
+
+    "icons": {
+        "16": "icons/logo_16x16.png",
+        "48": "icons/logo_48x48.png",
+        "128": "icons/logo_128x128.png"
+    },
+
     "declarative_net_request": {
         "rule_resources": [
             {
