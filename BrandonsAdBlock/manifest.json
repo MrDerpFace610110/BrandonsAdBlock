@@ -3,8 +3,13 @@
     "version": "1.0.1",
     "manifest_version": 3,
 
+    "background": {
+        "service_worker": "background.js"
+    },
+
     "permissions": [
         "declarativeNetRequest",
+        "declarativeNetRequestFeedback",
         "storage"
     ],
 
