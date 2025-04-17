@@ -30,4 +30,39 @@ document.addEventListener('DOMContentLoaded', () => {
             blockedCountEl.textContent = message.count;
         }
     });
+
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const tab = tabs[0];
+        if (!tab || !tab.url) return;
+    
+        const url = new URL(tab.url);
+        currentDomain = url.hostname;
+    
+        chrome.storage.local.get({ whitelist: [] }, (data) => {
+            const whitelist = new Set(data.whitelist);
+            isWhitelisted = whitelist.has(currentDomain);
+            whitelistBtn.textContent = isWhitelisted ? "Remove from Whitelist" : "Whitelist This Site";
+        });
+    });
+    
+    // Toggle whitelist state
+    whitelistBtn.addEventListener('click', () => {
+        if (!currentDomain) return;
+    
+        chrome.storage.local.get({ whitelist: [] }, (data) => {
+            let whitelist = new Set(data.whitelist);
+    
+            if (isWhitelisted) {
+                whitelist.delete(currentDomain);
+            } else {
+                whitelist.add(currentDomain);
+            }
+    
+            chrome.storage.local.set({ whitelist: [...whitelist] }, () => {
+                isWhitelisted = !isWhitelisted;
+                whitelistBtn.textContent = isWhitelisted ? "Remove from Whitelist" : "Whitelist This Site";
+                chrome.runtime.sendMessage({ type: 'whitelist-updated' });
+            });
+        });
+    });
 });
